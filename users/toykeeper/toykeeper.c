@@ -184,6 +184,7 @@ rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     #endif
 }
 
+#ifndef DONT_USE_EEPROM
 void apply_rgb_enabled(void) {
     if (user_config.rgb_enabled) {
         // apply user's default saved RGB mode and settings
@@ -196,6 +197,7 @@ void apply_rgb_enabled(void) {
         rgb_matrix_sethsv_noeeprom(HSV_OFF);
     }
 }
+#endif
 #endif  // ifdef HAS_RGB
 
 
@@ -331,7 +333,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         #endif  // ifndef DONT_USE_TK_INFO
             
-        #ifdef HAS_RGB
+        #if defined(HAS_RGB) && !defined(DONT_USE_EEPROM)
         case TK_RGBT:
             if (record->event.pressed) {
                 user_config.rgb_enabled = ! user_config.rgb_enabled;
