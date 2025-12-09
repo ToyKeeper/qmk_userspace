@@ -73,8 +73,8 @@ void matrix_init(void) {
   gpio_write_pin_high(C7);
 
   i2c_init();
-  i2c_set_keyscan_interval(LEFT, 2);
-  i2c_set_keyscan_interval(RIGHT, 2);
+  i2c_set_keyscan_interval(LEFT, I2C_KEYSCAN_INTERVAL);
+  i2c_set_keyscan_interval(RIGHT, I2C_KEYSCAN_INTERVAL);
   memset(rows, 0, sizeof(rows));
 
   matrix_init_kb();
