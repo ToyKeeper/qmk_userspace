@@ -332,7 +332,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         #endif  // ifndef DONT_USE_TK_INFO
-            
+
         #if defined(HAS_RGB) && !defined(DONT_USE_EEPROM)
         case TK_RGBT:
             if (record->event.pressed) {
@@ -354,50 +354,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         #endif  // ifndef DONT_USE_ANY_KEY
-
-        #ifdef USE_PALM  // palm keys
-
-        // I was going to do something fancy here... but meh
-
-        #else  // no palm keys
-
-        // hold = momentary(L_FN1)
-        // tap = left click
-        case TK_MOON:
-            switch (record->tap.count) {
-                case 0:  // Moon layer hold
-                    return true;  // QMK can handle it
-                default:  // mouse click afterward
-                    if (record->event.pressed) {
-                        register_code(MS_BTN1);
-                    } else {
-                        unregister_code(MS_BTN1);
-                    }
-                    return false;
-            }
-            break;
-
-        #if 0
-        // hold = momentary(L_FN1)
-        // tap = layer_off(L_FN1)
-        // 2tap+ = layer_on(L_FN1)
-        // (don't enable it on 1st tap, because sometimes I do that by accident)
-        case TK_MOON:
-            if ((1 == record->tap.count) && record->event.pressed) {
-                layer_off(L_FN1);  // TG(L_FN1) off
-                return false;
-            } else if (record->event.pressed) {
-                layer_on(L_FN1);  // MO(L_FN1) on, TG(L_FN1) on
-                return false;
-            }
-            else if (!(record->tap.count) && !(record->event.pressed)) {
-                layer_off(L_FN1);  // MO(L_FN1) off
-                return false;
-            }
-            break;
-        #endif
-
-        #endif  // ifdef USE_PALM
 
         // LGUI / RGUI depend on the keyboard:
         // - full 65%/75% layout:
