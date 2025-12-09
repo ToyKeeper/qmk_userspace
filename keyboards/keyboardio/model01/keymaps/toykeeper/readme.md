@@ -3,6 +3,25 @@ ToyKeeper's Keyboardio Model-01 Layout
 
 A butterfly-shaped split keyboard with a unique layout.
 
+WARNING: This keymap is no longer maintained.  There are a few reasons why:
+
+- My Model-01 has such bad key chatter that it's basically unusable, and QMK's
+  debouncing algorithms aren't implemented for it.  It needs significant
+  development effort to fix that, and it's unclear whether there's enough room
+  left in ROM to add the relevant code.  The build says it has only 738 bytes
+  free, which might not be enough to add proper debouncing.
+- Last time I tried to flash new firmware, the flashing process didn't work and
+  I haven't bothered to figure out why.
+- They hardware design was barely tolerable even at its best, so it's not worth
+  the effort to keep the firmware updated when I won't be typing on it anyway.
+
+It's kept here for historical purposes only.
+
+The last known working version is what is still installed on my keyboard.
+Here's what I get when I plug it in and press the build info key:
+
+`QMK 0.17.9-1732-g52d6c9 [keyboardio/model01:toykeeper], Build date 2022-11-18-07:09:13, Keymap: http://toykeeper.net/keyboard/qmk/tk-model01.png`
+
 
 ## At A Glance
 
