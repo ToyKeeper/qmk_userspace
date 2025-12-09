@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
-#define KEYMAP_URL "https://toykeeper.net/keyboard/qmk/tk-q1-v1.png"
+#define KEYMAP_URL "https://toykeeper.net/keyboard/qmk/tk-v1-q1.png"
 
 ///// personal config stuff /////
 
