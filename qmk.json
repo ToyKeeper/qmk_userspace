@@ -3,6 +3,7 @@
     "build_targets": [
         ["keychron/v1/ansi_encoder", "toykeeper"],
         ["keychron/q65/ansi_encoder", "toykeeper"],
-        ["novelkeys/nk65/v1", "toykeeper"]
+        ["novelkeys/nk65/v1", "toykeeper"],
+        ["input_club/whitefox", "toykeeper"]
     ]
 }
