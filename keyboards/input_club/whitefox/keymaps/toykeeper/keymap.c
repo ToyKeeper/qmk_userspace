@@ -1,5 +1,5 @@
 /* ToyKeeper's QMK keymap for Input:Club Whitefox Truefox
- * Copyright 2021-2022 Selene ToyKeeper
+ * Copyright 2021-2025 Selene ToyKeeper
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -40,10 +40,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // Number Pad(s)
 [L_NUMPAD] = MY_LAYOUT(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______,      _______,     _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,     _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_SLSH, TK_ASTR, TK_LPAR, TK_RPAR, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_7   , KC_8   , KC_9   , TK_ASTR, KC_SLSH, KC_EQL , _______, _______,
+    _______, _______, _______, _______, _______, _______, KC_DOT , KC_4   , KC_5   , KC_6   , TK_PLUS, KC_MINS,      _______,     _______,
+    _______, _______, _______, _______, _______, _______, KC_0   , KC_1   , KC_2   , KC_3   , KC_SLSH,      _______,     _______, _______,
     _______, _______, _______,                   _______,                            _______, _______,          _______, _______, _______
     ),
 
@@ -60,8 +60,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [L_FN1] = MY_LAYOUT(
     TK_SESC, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , TK_BSTG, _______, _______,
     KC_MPLY, KC_MNXT, KC_MPRV, TK_ANY , _______, _______, _______, KC_WH_U, KC_MS_U, KC_WH_D, _______, _______, _______, KC_DEL , KC_WH_U,
-    _______, DM_PLY2, DM_REC2, _______, _______, _______, KC_WH_L, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_R, _______,      KC_BTN3,     KC_WH_D,
-    KC_BTN3, DM_PLY1, DM_REC1, _______, _______, _______, TK_WARP, KC_BTN1, KC_BTN3, KC_BTN2, _______,      KC_BTN1,     KC_MS_U, KC_BTN2,
+    _______, DM_REC1, DM_REC2, _______, _______, _______, KC_WH_L, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_R, _______,      KC_BTN3,     KC_WH_D,
+    KC_BTN3, DM_PLY1, DM_PLY2, _______, _______, _______, TK_WARP, KC_BTN1, KC_BTN3, KC_BTN2, _______,      KC_BTN1,     KC_MS_U, KC_BTN2,
     _______, KC_BTN1, KC_BTN2,                   KC_DEL ,                            _______, _______,          KC_MS_L, KC_MS_D, KC_MS_R
     ),
 
