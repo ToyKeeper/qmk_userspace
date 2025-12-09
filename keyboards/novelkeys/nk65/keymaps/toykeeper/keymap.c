@@ -3,13 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-// TODO:
-// - Fix RGB toggle key
-// - Update to newer QMK which uses RGB Matrix instead of Wilbatech RGB
-
 #include "toykeeper.h"
-// for LED indicator ... because Wilba Tech doesn't use the standard QMK API
-#include "drivers/led/issi/is31fl3733.h"
 
 #define MY_LAYOUT LAYOUT_65_ansi
 
@@ -74,55 +68,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Fn2 / Star (upper right corner)
 [L_FN2] = MY_LAYOUT(
     QK_BOOT, KC_MYCM, KC_WSCH, KC_F13 , KC_F14 , KC_F15 , KC_F16 , KC_F17 , KC_F18 , KC_F19 , KC_F20 , KC_F21 , KC_F22 , TK_SINS, _______,
-    TK_INFO, EF_DEC , EF_INC , BR_DEC , BR_INC , ES_DEC , ES_INC , _______, _______, _______, _______, _______, KC_INS , KC_DEL , KC_MYCM,
-    KC_CAPS, H1_DEC , H1_INC , S1_DEC , S1_INC , TK_IUUI, _______, _______, _______, _______, _______, _______,      _______,     KC_WSCH,
-    TK_DF_3, H2_DEC , H2_INC , S2_DEC , S2_INC , _______, NK_TOGG, _______, _______, _______, _______,      _______,     KC_PGUP, KC_F13 ,
-    TK_DF_0, TK_DF_1, TK_DF_2,                   RGB_TOG,                            KC_APP , _______, _______, KC_HOME, KC_PGDN, KC_F14
+    TK_INFO, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS , KC_DEL , KC_F13 ,
+    KC_CAPS, RGB_HUI, RGB_SAI, RGB_VAI, _______, TK_IUUI, _______, _______, _______, _______, _______, _______,      _______,     KC_WSCH,
+    TK_DF_3, RGB_MOD, RGB_SPI, _______, _______, _______, NK_TOGG, _______, _______, _______, _______,      _______,     KC_PGUP, KC_MYCM,
+    TK_DF_0, TK_DF_1, TK_DF_2,                   RGB_TOG,                            KC_APP , _______, _______, KC_HOME, KC_PGDN, KC_END
     )
 
 };
 
-
-/* Indicator LEDS are part of the LED driver
- * Top LED is blue only. LED driver 2 RGB 7 Green channel
- * Middle LED is blue and red. LED driver 2 RGB 6 Red and Blue channel
- * (but the middle LED doesn't seem to work... at all)
- * Bottom LED is red only LED driver 2 RGB 6 Green channel.
- */
-bool led_update_user(led_t led_state) {
-    return false;  // don't let _kb() code do anything
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    uint8_t r = 0;
-    uint8_t g = 0;
-    uint8_t g2 = 0;
-    uint8_t b = 0;
-
-    // top LED: blue (on green channel)
-    if (IS_LAYER_ON_STATE(state, L_MOUSE)) g2 = 255;
-
-    // middle LED: blue+red
-    if (IS_LAYER_ON_STATE(state, L_FN1)) r = 255;
-
-    // middle LED: blue+red
-    if (IS_LAYER_ON_STATE(state, L_FN2)) b = 255;
-
-    // bottom LED: red (on green channel)
-    if (IS_LAYER_ON_STATE(state, L_NUMPAD)) g = 255;
-
-    IS31FL3733_set_color( 6+64-1, r, g, b );
-    IS31FL3733_set_color( 7+64-1, r, g2, b );
-
-    return state;
-}
-
-
-///// RGB indicators per key /////
-// This part is super weird and kludgey,
-// because this keyboard uses Wilba Tech's RGB code,
-// and it's not compatible with QMK's RGB Matrix,
-// so everything below here is an ugly hack.
 
 // highlight color for each layer while active
 const uint8_t layer_colors[][3] = {
@@ -156,99 +109,35 @@ const uint8_t mod_indicator_coords[][3] = {
     { 0, 0, 0, },  // stop
 };
 
-// these should be defined in a wilbatech .h file, but aren't:
-void map_row_column_to_led( uint8_t row, uint8_t column, uint8_t *led );
-void backlight_set_color( int index, uint8_t red, uint8_t green, uint8_t blue );
+// my middle LED is broken, but top+bottom work
+// values and channel info are taken from `nk65.c`
+#define LED_TOP  68  // blue only, green channel
+#define LED_MID  69  // blue+red, red+blue channels
+#define LED_BOT  70  // red only, green channel
+bool rgb_matrix_indicators_user(void) {
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t g2 = 0;
+    uint8_t b = 0;
 
-#define NO_LED 255
-#define rgb_set_color(i,r,g,b) backlight_set_color(i,r,g,b)
-#define rowcol_to_led(row,col,index) map_row_column_to_led(row,col,&index)
+    layer_state_t state = layer_state | default_layer_state;
 
-// copied and adapted from toykeeper.c
-//bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-void backlight_effect_indicators(void) {
-    // indicate current status on the RGB matrix
-    // (active modifiers and each active non-base layer)
+    // top LED: blue (on green channel)
+    if (IS_LAYER_ON_STATE(state, L_MOUSE)) g = 255;
 
-    // light up all keys defined in an active non-base layer
-    uint8_t top = get_highest_layer(layer_state);
-    if (top >= L_BOTTOM)
-    {
-        // light up each key according to the
-        // highest active non-base layer which defines it
-        for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
-            for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
-                uint8_t index;
-                rowcol_to_led(row, col, index);
+    // middle LED: blue+red
+    if (IS_LAYER_ON_STATE(state, L_FN1)) r = 255;
 
-                if (index != NO_LED) {
-                    uint16_t kc = 0;
-                    for (uint8_t layer=top; (layer>=L_BOTTOM) && (kc<=KC_TRNS); layer--) {
-                        if (IS_LAYER_ON(layer)) {
-                            kc = keymap_key_to_keycode(layer, (keypos_t){col,row});
-                            if (kc > KC_TRNS) {
-                                rgb_set_color(index,
-                                        layer_colors[layer][0],
-                                        layer_colors[layer][1],
-                                        layer_colors[layer][2]
-                                        );
-                            }  // hooray for deep nesting
-                        }
-                    }
-                }
-            }
-        }
-    }
+    // middle LED: blue+red
+    if (IS_LAYER_ON_STATE(state, L_FN2)) b = 255;
 
-    // light up the indicator key for each active layer with an indicator
-    for (uint8_t i=0; ; i++) {
-        uint8_t l = layer_indicator_colors[i][0];
-        uint8_t x = layer_indicator_colors[i][1];
-        uint8_t y = layer_indicator_colors[i][2];
-        uint8_t r = layer_indicator_colors[i][3];
-        uint8_t g = layer_indicator_colors[i][4];
-        uint8_t b = layer_indicator_colors[i][5];
-        if (! l) break;
-        if (IS_LAYER_ON(l)) {
-            uint8_t index;
-            rowcol_to_led(y, x, index);
-            rgb_set_color(index, r, g, b);
-        }
-    }
+    // bottom LED: red (on green channel)
+    if (IS_LAYER_ON_STATE(state, L_NUMPAD)) g2 = 255;
 
-    // light up each active modifier key
-    for (uint8_t i=0; ; i++) {
-        uint8_t m = mod_indicator_coords[i][0];
-        uint8_t x = mod_indicator_coords[i][1];
-        uint8_t y = mod_indicator_coords[i][2];
-        uint8_t state = 0;
-        if (! m) break;
-        switch (m) {
-            case 1:  // shift
-                if (is_caps_word_on() || 
-                    ((get_mods() | get_oneshot_mods()) & (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT))))
-                    state = 1;
-                break;
-            case 2:  // ctrl
-                if ((get_mods() | get_oneshot_mods()) & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)))
-                    state = 1;
-                break;
-            case 3:  // alt
-                if ((get_mods() | get_oneshot_mods()) & (MOD_BIT(KC_LALT) | MOD_BIT(KC_RALT)))
-                    state = 1;
-                break;
-            case 4:  // gui
-                if ((get_mods() | get_oneshot_mods()) & (MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI)))
-                    state = 1;
-                break;
-        }
-        if (state) {
-            uint8_t index;
-            rowcol_to_led(y, x, index);
-            rgb_set_color(index, mod_colors[0], mod_colors[1], mod_colors[2]);
-        }
-    }
+    rgb_matrix_set_color(LED_TOP, 0, g, 0);
+    rgb_matrix_set_color(LED_MID, r, 0, b);
+    rgb_matrix_set_color(LED_BOT, 0, g2, 0);
 
-    //return true;  // no return value for wilbatech RGB
+    return false;
 }
 
