@@ -1,0 +1,2 @@
+#!/bin/zsh
+grep -rE 'FIXME|TODO' **/*.c **/*.h **/*.txt **/*.md
