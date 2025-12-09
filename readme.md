@@ -104,10 +104,11 @@ Multiple layouts selectable with hotkeys or the dipswitch:
   - Colemak-DH-TK (my variant of Colemak-DH)
   - Undvorak (allows typing Qwerty when the host is remapped to Dvorak)
 
-Select a layout by holding Star (the "del" key in the upper right) and pressing
-one of the lower-left keys (ctrl, win, alt, or lshift).  This saves that layer
-to the current "save slot".  You can switch between save slots by toggling
-a dip switch on the back of some keyboard models.
+Select a layout by holding Star (the key in the upper right corner of the
+keyboard) and pressing one of the lower-left corner keys (Ctrl, Win, Alt, or
+LShift).  This saves that layer to the current "save slot".  You can switch
+between save slots by toggling a dip switch on the back of some keyboard
+models.
 
 ### Momentary "Fn" style layers
 
