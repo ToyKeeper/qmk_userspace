@@ -2,6 +2,7 @@
     "userspace_version": "1.1",
     "build_targets": [
         ["keychron/v1/ansi_encoder", "toykeeper"],
-        ["keychron/q65/ansi_encoder", "toykeeper"]
+        ["keychron/q65/ansi_encoder", "toykeeper"],
+        ["novelkeys/nk65/v1", "toykeeper"]
     ]
 }
