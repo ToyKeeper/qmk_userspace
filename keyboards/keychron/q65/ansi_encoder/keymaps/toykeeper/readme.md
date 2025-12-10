@@ -33,15 +33,20 @@ Things which differ from other models:
   * Macro column
     * The left side has 4 extra keys and a knob.
     * The extra column has several different modes, indicated by color.
-      * Blank: Base layer.  App launchers and dynamic macro playback.
-      * Hold Moon: App close (F14), app launcher (F13), and dynamic macro recording.
-      * Moon layer: F15 to F18 (lower / raise / pin / group window)
-      * Star layer: F19 to F22
-      * Mouse layer: Button 1/2/3 and Warp (F23)
-    * To activate a macro column mode, hold a layer key (or none) and press the knob.
+      * Blank: Base layer.  First 4 app launcher keys.
+      * Moon: Second 4 app launcher keys: F15 to F18
+      * Star: Third 4 app launcher keys: F19 to F22
+      * Mouse: Button 1/2/3 and Warp (F23)
+      * Macros: One-touch access to dynamic macro record and play functions.
+        Tap the knob without any layers active to toggle between Base mode and
+        Macro mode.
+    * To activate a macro column mode, hold a layer key (or none) and press the
+      knob.
     * Muscle memory makes Macro Key 1 (bottom) easy to hit by accident, so it
       has a non-destructive function and doubles as a second Moon key when
       held.
+    * Macro keys 1, 2, and 3 activate their layers, to make it easier to hold
+      one while tapping the knob.
 
   * Dipswitch
     * Two core layouts can be saved for easy access with the dipswitch.  Each

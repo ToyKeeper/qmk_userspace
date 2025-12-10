@@ -423,6 +423,10 @@ Settings are remembered after unplugging the keyboard.
   though, so this likely won't be needed unless the host gets caps stuck on
   somehow.
 
+- The "Any" key: Ever had a program tell you to "press any key"?  Well, now you
+  can have an "Any" key.  It generates random letters, numbers, and symbols.
+  It's not cryptography-grade randomness, but it's plenty for just having fun.
+
 ### Physical design features
 
 - Built for 65% to 75% layouts.
