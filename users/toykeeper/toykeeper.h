@@ -77,7 +77,8 @@ enum {
     L_XC4,
     #endif
 };
-#define L_BOTTOM (L_COLEMAK+1)  // lowest non-default layer
+#define L_BOTTOM  (L_COLEMAK+1)  // lowest non-default layer
+#define NUM_XC_LAYERS  4
 
 enum my_keycodes {
     //TK_INFO = SAFE_RANGE,  // print build version / info

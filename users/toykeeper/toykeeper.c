@@ -242,7 +242,7 @@ uint8_t xc_layer = 0;
 void set_xc_layer(uint8_t layer) {
     // activate layer if > 0
     // ... and deactivate all other XC layers > 0
-    for (uint8_t i=1; i<=4; i++) {
+    for (uint8_t i = 1; i <= NUM_XC_LAYERS; i ++) {
         if (i == layer) { layer_on(L_XC1 + i - 1); }
         else { layer_off(L_XC1 + i - 1); }
     }
@@ -301,14 +301,21 @@ void eeconfig_init_user(void) {
     user_config.raw = 0;
 
     #ifdef HAS_DIPSWITCH
+        // each can store values 0 to 3, for the 4 base layers
         user_config.switch_off = 0;  // qwerty
         user_config.switch_on = 1;   // dvorak
     #endif
     #ifdef HAS_F_ROW
-        user_config.f_lock = 0;      // regular F1-F12 keys by default
+        // 1 = F1-F12 keys, 0 = launcher keys
+        user_config.f_lock = 0;
     #endif
     #ifndef DONT_USE_TK_IUUI
-        user_config.dvoriuk = 0;         // don't swap keys on dvorak layer
+        // don't swap keys on dvorak layer
+        user_config.dvoriuk = 0;
+    #endif
+    #ifdef HAS_RGB
+        // default to RGB on
+        user_config.rgb_enabled = 1;
     #endif
 
     eeconfig_update_user(user_config.raw);
@@ -336,18 +343,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         #if defined(HAS_RGB) && !defined(DONT_USE_EEPROM)
         case TK_RGBT:
             if (record->event.pressed) {
-                user_config.rgb_enabled = ! user_config.rgb_enabled;
+                user_config.rgb_enabled = (! user_config.rgb_enabled);
                 eeconfig_update_user(user_config.raw);
                 apply_rgb_enabled();
             }
             return true;
-        #endif  // ifdef HAS_RGB
+        #endif  // #if defined(HAS_RGB) && !defined(DONT_USE_EEPROM)
 
         #ifndef DONT_USE_ANY_KEY
         // random character (with auto-repeat)
         case TK_ANY:
             if (record->event.pressed) {
                 tap_random_key();
+                // can't use host's auto-repeat, simulate it internally
                 any_key_token = defer_exec(AUTOREPEAT_DELAY, any_key_cb, NULL);
             } else {
                 cancel_deferred_exec(any_key_token);
@@ -460,6 +468,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         #else  // normal: no USE_PALM, no USE_RGUI_2TAP_MOUSELOCK
         case TK_RGUI:
+            // can't use `RGUI_T(layer_invert(L_MOUSE))`
             // hold: RGUI  /  tap: MouseLock
             if (0 == record->tap.count) {
                 layer_off(L_MOUSE);
@@ -479,6 +488,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         #ifdef USE_NUMPAD
         // - hold: RCTL
         // - tap: toggle L_NUMPAD
+        // can't use `RCTL_T(layer_invert(L_NUMPAD))`
         case TK_RCTL:
             if (record->tap.count && record->event.pressed) {
                 layer_invert(L_NUMPAD);
@@ -537,20 +547,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         #if defined(HAS_XTRA_COLUMN) && defined(DYNAMIC_MACRO_KEEP_ORIGINAL_LAYER_STATE)
         // clear layer state when recording macros from momentary layer
-        #if 0
+        // FIXME: this doesn't work and I don't know how to fix it
+        //        (so I made it just ignore these keys for now)
         case TK_REC1:
-            layer_clear();
-            process_dynamic_macro(DM_REC1, record);
+            //layer_clear();
+            //process_dynamic_macro(DM_REC1, record);
             return false;
         case TK_REC2:
-            layer_clear();
-            process_dynamic_macro(DM_REC2, record);
+            //layer_clear();
+            //process_dynamic_macro(DM_REC2, record);
             return false;
-            //if (IS_LAYER_ON_STATE(layer_state, L_FN1)) {
-            //    layer_clear();
-            //}
-            //return true;
-        #endif
         #endif
 
         #if defined(HAS_F_ROW) && !defined(DONT_USE_EEPROM)
@@ -629,3 +635,4 @@ void tap_random_key(void) {
     }
 }
 #endif  // ifndef DONT_USE_ANY_KEY
+
