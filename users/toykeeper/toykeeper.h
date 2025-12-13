@@ -104,7 +104,16 @@ enum my_keycodes {
     TK_REC2,
     //TK_PLY1,
     //TK_PLY2,
+    #ifdef IS_NUPHY_AIR75v2
+    TK_BAT,   // show battery charge level on side LEDs
+    TK_BNOW,  // show battery charge level on number keys
+    #endif
 };
+
+#ifdef IS_NUPHY_AIR75v2
+bool tk_bat_momentary;
+void nuphy_indicators_user(void);
+#endif
 
 // custom keys which don't need a custom enum
 #ifdef USE_PALM
@@ -209,7 +218,13 @@ typedef union {
         #ifdef HAS_RGB
             unsigned rgb_enabled : 1;  // enable RGB matrix
         #endif
+        #ifdef IS_NUPHY_AIR75v2
+            unsigned bat_show   : 1;  // show battery status on side LEDs
+        #endif
     };
 } user_config_t;
+//#define EECONFIG_USER_DATA_SIZE sizeof(user_config_t)
+
+user_config_t user_config;
 #endif  // ifndef DONT_USE_EEPROM
 

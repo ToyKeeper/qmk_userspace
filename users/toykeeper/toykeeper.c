@@ -69,7 +69,6 @@ void apply_rgb_enabled(void);
 #endif
 
 #ifndef DONT_USE_EEPROM
-user_config_t user_config;
 uint8_t boot_complete = 0;
 #endif
 
@@ -178,6 +177,10 @@ rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             rgb_matrix_set_color(index, mod_colors[0], mod_colors[1], mod_colors[2]);
         }
     }
+
+    #ifdef IS_NUPHY_AIR75v2
+    nuphy_indicators_user();
+    #endif  // ifdef IS_NUPHY_AIR75v2
 
     #ifndef OLD_QMK
     return false;
@@ -316,6 +319,10 @@ void eeconfig_init_user(void) {
     #ifdef HAS_RGB
         // default to RGB on
         user_config.rgb_enabled = 1;
+    #endif
+    #ifdef IS_NUPHY_AIR75v2
+        // show battery charge on side LEDs
+        user_config.bat_show = 1;
     #endif
 
     eeconfig_update_user(user_config.raw);
@@ -567,6 +574,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;  // let QMK do the rest
         #endif  // ifdef HAS_F_ROW
+
+        #ifdef IS_NUPHY_AIR75v2
+        case TK_BNOW:  // show battery charge level NOW on number keys
+            // display only while pressed
+            tk_bat_momentary = !(!(record->event.pressed));
+            return false;
+
+        case TK_BAT:  // show battery charge level ALL THE TIME on side LEDs
+            if (record->event.pressed) {
+                user_config.bat_show = !user_config.bat_show;
+                eeconfig_update_user(user_config.raw);
+            }
+            return false;
+        #endif
 
     }
     return true;  // send un-handled events to parent for processing

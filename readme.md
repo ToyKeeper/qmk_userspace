@@ -32,7 +32,7 @@ the links provided in each keymap's readme file.
 ### Nuphy Air75 v2
 
 This requires a
-[modified fork of a vendor-specific fork](https://github.com/ToyKeeper/qmk_firmware/tree/tk-nuphy/keyboards/nuphy/air75_v2/ansi/keymaps/toykeeper)
+[modified fork of a vendor-specific fork](https://github.com/ToyKeeper/qmk_firmware/tree/tk-jincao1/keyboards/nuphy/air75_v2/ansi/keymaps/toykeeper)
 of QMK v0.25 to build.
 
 [Nuphy Air75 v2](keyboards/nuphy/air75_v2/ansi/keymaps/toykeeper)
